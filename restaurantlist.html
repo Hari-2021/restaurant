@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Restaurant List with Actions</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            margin-top: 50px;
+        }
+        
+        .restaurant-card {
+            margin-bottom: 20px;
+        }
+        
+        #addRestaurantForm,
+        #add,
+        #hr {
+            display: none;
+            /* Hide the Add Restaurant form */
+        }
+        
+        .custom-select {
+            width: 305%;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.html">BistroPal</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="restaurantlist.html">Restaurants</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="addrestaurant.html">Add Restaurant</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="aboutus.html">About Us</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 class="mb-4" id="add">Add Restaurant</h2>
+
+        <form id="addRestaurantForm">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cuisine">Cuisine:</label>
+                <input type="text" class="form-control" id="cuisine" required>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <input type="text" class="form-control" id="address" required>
+            </div>
+
+            <div class="form-group">
+                <label for="city">City:</label>
+                <input type="text" class="form-control" id="city" required>
+            </div>
+
+            <div class="form-group">
+                <label for="rating">Rating:</label>
+                <input type="number" class="form-control" id="rating" min="1" max="5" required>
+            </div>
+
+            <button type="button" class="btn btn-primary" onclick="addRestaurant()">Add Restaurant</button>
+        </form>
+
+        <hr id="hr">
+
+        <h3 class="mb-4">Restaurant List</h3>
+
+        <div class="form-row mb-4" style="display: grid;">
+            <div class="form-group col-md-4">
+                <label for="cuisineFilter">Filter by Cuisine:</label>
+                <select class="custom-select" id="cuisineFilter" onchange="filterRestaurants()">
+                    <option value="">All</option>
+                    <option value="italian">Italian</option>
+                    <option value="mexican">Mexican</option>
+                </select>
+            </div>
+
+            <div class="form-group col-md-4">
+                <label for="sortOption">Sort By:</label>
+                <select class="custom-select" id="sortOption" onchange="sortRestaurants()">
+                    <option value="name">Name </option>
+                    <option value="rating">Rating </option>
+                </select>
+            </div>
+        </div>
+
+        <div id="restaurantList">
+            <!-- Restaurant cards will be dynamically added here -->
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <h6>© 2023 BistroPal. All rights reserved.</h6>
+        </div>
+    </footer>
+
+    <script>
+        var restaurants = [];
+
+        function addRestaurant() {
+            // Get values from the form
+            var name = document.getElementById("name").value;
+            var cuisine = document.getElementById("cuisine").value;
+            var address = document.getElementById("address").value;
+            var city = document.getElementById("city").value;
+            var rating = document.getElementById("rating").value;
+
+            var restaurant = {
+                id: restaurants.length + 1,
+                name: name,
+                cuisine: cuisine,
+                address: address,
+                city: city,
+                rating: rating
+            };
+
+            // Add the restaurant to the array
+            restaurants.push(restaurant);
+
+            localStorage.setItem('restaurants', JSON.stringify(restaurants));
+
+            renderRestaurants();
+
+            // Optionally, you can reset the form after adding a restaurant
+            document.getElementById("addRestaurantForm").reset();
+        }
+
+        function renderRestaurants(filteredRestaurants) {
+            var restaurantListContainer = document.getElementById("restaurantList");
+            restaurantListContainer.innerHTML = "";
+
+            var displayRestaurants = filteredRestaurants || restaurants;
+
+            displayRestaurants.forEach(function(restaurant) {
+                var card = document.createElement("div");
+                card.className = "card restaurant-card";
+                card.innerHTML = `
+        <div class="card-body">
+          <h5 class="card-title">${restaurant.name}</h5>
+          <p class="card-text"><strong>Cuisine:</strong> ${restaurant.cuisine}</p>
+          <p class="card-text"><strong>Address:</strong> ${restaurant.address}, ${restaurant.city}</p>
+          <p class="card-text"><strong>Rating:</strong> ${restaurant.rating}</p>
+          <button class="btn btn-info mr-2" style="margin-left:10px ;background-color:#007bff;" onclick="viewDetails(${restaurant.id})">View Details</button>
+          <button class="btn btn-danger mr-2" onclick="deleteRestaurant(${restaurant.id})">Delete</button>
+          <button class="btn btn-warning" onclick="updateRestaurant(${restaurant.id})">Update</button>
+        </div>
+      `;
+                restaurantListContainer.appendChild(card);
+            });
+        }
+
+        function filterRestaurants() {
+            var cuisineFilter = document.getElementById("cuisineFilter").value;
+            var filteredRestaurants = restaurants;
+
+            if (cuisineFilter) {
+                filteredRestaurants = restaurants.filter(function(restaurant) {
+                    return restaurant.cuisine === cuisineFilter;
+                });
+            }
+
+            renderRestaurants(filteredRestaurants);
+        }
+
+        function sortRestaurants() {
+            var sortOption = document.getElementById("sortOption").value;
+            var sortedRestaurants = [...restaurants]; // Create a copy to avoid modifying the original array
+
+            if (sortOption === "name") {
+                sortedRestaurants.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (sortOption === "rating") {
+                sortedRestaurants.sort((a, b) => b.rating - a.rating);
+            }
+
+            renderRestaurants(sortedRestaurants);
+        }
+
+        function viewDetails(restaurantId) {
+            window.location.href = `./viewdetails.html?id=${restaurantId}`;
+        }
+
+        function deleteRestaurant(restaurantId) {
+            restaurants = restaurants.filter(function(restaurant) {
+                return restaurant.id !== restaurantId;
+            });
+
+            renderRestaurants();
+        }
+
+        function updateRestaurant(restaurantId) {
+            window.location.href = `./update.html?id=${restaurantId}`;
+
+        }
+
+        window.onload = function() {
+            var storedRestaurants = localStorage.getItem('restaurants');
+            if (storedRestaurants) {
+                restaurants = JSON.parse(storedRestaurants);
+                renderRestaurants();
+            }
+        };
+
+        // Save data to localStorage before navigating away from the page
+        window.onbeforeunload = function() {
+            localStorage.setItem('restaurants', JSON.stringify(restaurants));
+        };
+    </script>
+</body>
+
+</html>

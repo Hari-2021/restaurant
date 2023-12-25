@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Montserrat:wght@300&family=Open+Sans:wght@300&family=Roboto&display=swap');
+* {
+    font-family: 'Lato', sans-serif;
+}
+
+
+/* navbar */
+
+.bg-light a {
+    font-weight: 900;
+    font-size: 25px;
+}
+
+.navbar-nav li a {
+    font-size: 20px;
+    font-weight: 900;
+    margin-right: 20px;
+}
+
+
+/* navbar ends */
+
+
+/* welcome */
+
+.container-fluid {
+    background-color: #dee2e6;
+    height: 400px;
+}
+
+.container-fluid h1 {
+    padding: 70px 0 10px 0;
+    font-size: 70px;
+    text-align: center;
+}
+
+.container-fluid p {
+    margin: 20px 0 40px 0;
+    text-align: center;
+    font-size: 21px;
+}
+
+.container-fluid h4 {
+    margin-top: 40px;
+    font-size: 18px;
+    text-align: center;
+    font-weight: 800;
+}
+
+
+/* wecome ends */
+
+
+/* menu & order */
+
+h4 {
+    font-family: 'Lato', sans-serif;
+    margin: 30px 0px 30px 0px;
+    font-size: 30px;
+    font-weight: bolder;
+}
+
+.card-body {
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+.card h5 {
+    font-weight: 900;
+    margin: 15px 0px 15px 15px;
+}
+
+.card p {
+    margin: 15px 0px 15px 15px;
+    padding-bottom: 20px;
+    font-weight: 500;
+}
+
+
+/* menu & order ends */
+
+
+/* footer */
+
+h6 {
+    padding: 20px 0px;
+    text-align: center;
+}

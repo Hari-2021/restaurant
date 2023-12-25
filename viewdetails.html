@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Restaurant Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.html">BistroPal</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="restaurantlist.html">Restaurants</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="addrestaurant.html">Add Restaurant</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="aboutus.html">About Us</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container" style="margin-top: 20px;">
+        <h2 style="font-weight: bold;">Restaurant Details</h2>
+        <br>
+        <div id="restaurantDetails"></div>
+    </div>
+
+    <script>
+        // Sample JavaScript for rendering restaurant details
+        window.onload = function() {
+            var storedRestaurants = localStorage.getItem('restaurants');
+            if (storedRestaurants) {
+                var restaurants = JSON.parse(storedRestaurants);
+                renderRestaurantDetails(restaurants);
+            }
+        };
+
+        function renderRestaurantDetails(restaurants) {
+            var restaurantId = getParameterByName('id'); // Get the restaurant ID from the query parameter
+            var selectedRestaurant = restaurants.find(function(restaurant) {
+                return restaurant.id == restaurantId;
+            });
+
+            if (selectedRestaurant) {
+                document.getElementById('restaurantDetails').innerHTML = `
+                    <h2><strong>${selectedRestaurant.name}</strong></h2>
+                    <p><strong>Cuisine:</strong> ${selectedRestaurant.cuisine}</p>
+                    <p><strong>Address:</strong> ${selectedRestaurant.address}, ${selectedRestaurant.city}</p>
+                    <p><strong>Rating:</strong> ${selectedRestaurant.rating}</p>
+                    <br>
+                    <h2><strong> Menu:</strong></h2>
+                    <br>
+                    <h2><strong> Reviews:</strong></h2>
+                `;
+            }
+        }
+
+        function getParameterByName(name) {
+            var url = new URL(window.location.href);
+            return url.searchParams.get(name);
+        }
+
+        function redirectToUpdate(restaurantId) {
+            window.location.href = `update.html?id=${restaurantId}`;
+        }
+    </script>
+</body>
+
+</html>
